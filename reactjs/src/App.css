@@ -1,0 +1,169 @@
+.box{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.pagecolumn{
+  display: flex;
+  flex-direction: column;
+  min-width: 150px;
+  align-items: start;
+}
+
+.formcolumn{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 80%;
+}
+
+.pagebutton{
+  min-width: 80%;
+}
+
+.inputgroup{
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: flex-start;
+  margin-right: 50px;
+}
+
+.inputrow{
+  margin-top: 5px;
+  display: flex;
+  flex-direction: row;
+  justify-content: left;
+}
+
+.vertical {
+  border-left: 6px solid #808080;
+  height: inherit;
+  position:absolute;
+  background-color: "gray";
+  border: "none";
+  left: 13vw;
+}
+
+.bold{
+  font-weight: bold;
+}
+
+.pink{
+  color: pink;
+}
+
+/*  */
+
+.App {
+  /* text-align: center; */
+  background-color: rgb(160, 201, 226);
+  height: 100vh;
+}
+
+
+
+
+
+/* .loginForm {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-self: center;
+  justify-content: center;
+  border: 0;
+} */
+
+
+
+.date {
+  display: flex;
+}
+
+
+.rubberBand {
+  -webkit-animation-name: rubberBand;
+  animation-name: rubberBand;
+}
+
+
+label {
+  margin: 1% 6px;
+}
+
+
+
+.field {
+  width: 50%;
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 1%;
+}
+
+.HPHeader {
+  display: flex;
+}
+
+.outerBox {
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  /* width: 400px; */
+  /* height: 400px; */
+  /* height: 75%; */
+  /* width: 75%; */
+  /* padding: 5% 20%; */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.link {
+  color: black;
+  text-decoration: none;
+}
+
+a.link.active {
+  color: white;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 5%;
+}
+
+
+/* th,
+td {
+  text-align: center;
+  vertical-align: middle;
+  padding: 1rem;
+}
+
+button {
+  text-decoration: none;
+} */
+
+.glassDesign {
+  /* height: 500px; */
+  /* width: 500%; */
+  /* padding: 2%; */
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: saturate(180%) blur(10px);
+  background: rgba(255, 255, 255, 0.55);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(6.9px);
+  -webkit-backdrop-filter: blur(6.9px);
+  border: 1px solid rgba(255, 255, 255, 0.37);
+}
+
+
+.box {
+  width: 80vw;
+  height: 85vh;
+  padding: 2%;
+  
+}
