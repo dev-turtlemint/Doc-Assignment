@@ -6,11 +6,15 @@ import Sidebar from "./Sidebar";
 import DatePicker  from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css'
 import { dateType } from "./types";
+import { parseISO } from 'date-fns'; // Import the parseISO function
+
 
 const REACT_APP_BASE_URL = process.env.REACT_APP_BASE_URL;
 
 
 function Editpage() {
+    const navigate = useNavigate();
+
     const [loading, setLoading] = useState(false);
 
     const[searchText, setSearchText] = useState('');
@@ -23,7 +27,7 @@ function Editpage() {
         sex: '',
         pincode: '',
         address: '',
-        visit_date: new Date,
+        visit_date: '',
         phy_id: '',
         phy_name: '',
         phone: '',
@@ -33,10 +37,25 @@ function Editpage() {
       })
 
       const handleChange = (key: any, value: any ) => {
+        if(key == 'visit_date'){
+            setData((prevData) => ({
+                ...prevData,
+                [key]: parseISO(value),
+              }));
+        }
+        else{
+            setData((prevData) => ({
+                ...prevData,
+                [key]: value,
+              }));
+        }
+      };
+
+      const handleChangedatepicker = (key: any, value: any ) => {
         setData((prevData) => ({
             ...prevData,
             [key]: value,
-          }));
+            }));
       };
 
       const findpatient = () => {
@@ -45,7 +64,7 @@ function Editpage() {
 
     //   const token = req.headers["x-access-token"];
 
-      const setDataOnPage = (data: { [key: string]: string }) => {
+      const setDataOnPage = (data: any) => {
         setLoading(true);
         
         for(const key in data){
@@ -74,7 +93,7 @@ function Editpage() {
         });
         const response = await req.json();
         if (response.status === "ok") {
-            alert("Patient added Successfully!");
+            alert("Appointment edited Successfully!");
         } else {
             alert(response.error);
         }
@@ -104,6 +123,28 @@ function Editpage() {
         }
       },[searchText])
 
+    async function delappointment() {
+    
+        const req = await fetch(`${REACT_APP_BASE_URL}/api/del`, {
+            method: "POST",
+            headers: {
+            "Content-Type": "application/json",
+            // "x-access-token": localStorage.getItem("token"),
+            },
+            body: JSON.stringify({
+                data: data,
+            }),
+        });
+        const response = await req.json();
+        if (response.status === "ok") {
+            alert("Appointment deleted Successfully!");
+            navigate('/search');
+            // setDataOnPage(data);
+        } else {
+            alert(response.error);
+        }
+    }
+
   return(
     <div className="outerBox">
         <div className="glassDesign">
@@ -127,7 +168,11 @@ function Editpage() {
                                     <Button
                                     onClick={findpatient}
                                     >Find</Button>
+                                    <Button
+                                    onClick={delappointment}
+                                    >Delete</Button>
                                 </div>
+                                
                             </div>
                         </div>
                         <div className="inputrow">
@@ -214,7 +259,17 @@ function Editpage() {
                             </div>
                             <div className="inputgroup">
                                 <FormLabel>Visit Date</FormLabel>
-                                <DatePicker selected={data.visit_date} onChange={(e) => handleChange('visit_date', e)} />
+                                <DatePicker
+                                selected={ (typeof data.visit_date == 'string' ) ? null : data.visit_date}
+                                placeholderText={"Select Date"}
+                                onChange={(e) => handleChangedatepicker('visit_date', e)} 
+                                dateFormat="yyyy-MM-dd HH:mm:ss"
+                                showTimeSelect
+                                timeFormat="HH:mm:ss"
+                                timeIntervals={1}
+                                timeCaption="Time"
+                                isClearable
+                                />
                             </div>
                         </div>
                         <hr style={{color: "lightgray", backgroundColor: "gray", border: "none", height: "5px", marginTop: "20px", marginRight: "50px"}}/>
@@ -236,3 +291,4 @@ function Editpage() {
 }
 
 export default Editpage
+

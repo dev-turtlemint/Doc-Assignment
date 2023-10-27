@@ -181,6 +181,50 @@ app.post("/api/update", async (req, res) => {
     }
   });
 
+  app.post("/api/del", async (req, res) => {
+    try {
+      const id = req.body.data.id;
+      const name = req.body.data.name;
+      const location = req.body.data.location;
+      const age = req.body.data.age;
+      const sex = req.body.data.sex;
+      const pincode = req.body.data.pincode;
+      const address = req.body.data.address;
+      const visit_date = req.body.data.visit_date;
+      const phy_id = req.body.data.phy_id;
+      const phy_name = req.body.data.phy_name;
+      const phone = req.body.data.phone;
+      const email = req.body.data.email;
+      const aud = req.body.data.aud;
+      const jti = req.body.data.jti;
+      // console.log(next_visit, 'working')
+  
+      await serviceAccountAuth.authorize();
+  
+      const sheet = doc.sheetsByIndex[0]; // or use `doc.sheetsById[id]` or `doc.sheetsByTitle[title]`
+  
+      let rows = await sheet.getRows();
+      maxid = 1.0
+      for (let index = 0; index < rows.length; index++) {
+          const row = rows[index];
+          // console.log(row._rowNumber, phone, row._rawData[10], 'working')
+          if (phone == row._rawData[10]) {
+              // console.log(index)
+              await row.delete(); // delete a row
+              break;
+          }
+      };
+  
+      res.json({ status: "ok" });
+    } catch (error) {
+      console.log(error);
+      res.json({
+        status: "error",
+        error: "Record not found!",
+      });
+    }
+  });
+
 app.listen(1337, () => {
   console.log("Server has started on 1337");
 });

@@ -25,7 +25,7 @@ function Search() {
         sex: '',
         pincode: '',
         address: '',
-        visit_date: new Date,
+        visit_date: '',
         phy_id: '',
         phy_name: '',
         phone: '',
@@ -36,7 +36,6 @@ function Search() {
 
       const handleChange = (key: any, value: any ) => {
         if(key == 'visit_date'){
-            console.log('trueee')
             setData((prevData) => ({
                 ...prevData,
                 [key]: parseISO(value),
@@ -75,9 +74,6 @@ function Search() {
         });
         const response = await req.json();
         console.log(response);
-        console.log(response.data['visit_date'])
-        console.log(new Date(response.data['visit_date']))
-        console.log(parseISO(response.data['visit_date']))
 
         setDataOnPage(response.data);
 
@@ -174,13 +170,14 @@ function Search() {
                             <div className="inputgroup">
                                 <FormLabel>Visit Date</FormLabel>
                                 <DatePicker
-                                selected={data.visit_date}
+                                selected={ (typeof data.visit_date == 'string' ) ? null : data.visit_date}
                                 onChange={() => {}}
                                 dateFormat="yyyy-MM-dd HH:mm:ss"
                                 showTimeSelect
                                 timeFormat="HH:mm:ss"
                                 timeIntervals={1}
                                 timeCaption="Time"
+                                disabled
                                 />
                             </div>
                         </div>

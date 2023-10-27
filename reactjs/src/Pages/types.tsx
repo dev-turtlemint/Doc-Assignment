@@ -6,7 +6,7 @@ export interface dateType{
     sex: string,
     pincode: string,
     address: string,
-    visit_date: Date,
+    visit_date: Date|string,
     phy_id: string,
     phy_name: string,
     phone: string,

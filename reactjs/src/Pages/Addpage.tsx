@@ -19,40 +19,40 @@ function Addpage() {
   const state: any = useSelector((state) => state);
 
 
-  const [data, setData] = useState<dateType>({
-    id: '',
-    name: '',
-    location: '',
-    age: '',
-    sex: '',
-    pincode: '',
-    address: '',
-    visit_date: new Date,
-    phy_id: '',
-    phy_name: '',
-    phone: '',
-    email: '',
-    aud: '',
-    jti: ''
-  })
-
-//   For testing purposes
 //   const [data, setData] = useState<dateType>({
-//     id: '1',
-//     name: 'Dev',
-//     location: 'Goa',
-//     age: '25',
-//     sex: 'Male',
-//     pincode: '403110',
-//     address: 'A 303 Casa Amora',
-//     visit_date: new Date,
-//     phy_id: '132334',
-//     phy_name: 'Rishabh Singh',
-//     phone: '9373869815',
+//     id: '',
+//     name: '',
+//     location: '',
+//     age: '',
+//     sex: '',
+//     pincode: '',
+//     address: '',
+//     visit_date: '',
+//     phy_id: '',
+//     phy_name: '',
+//     phone: '',
 //     email: '',
 //     aud: '',
 //     jti: ''
 //   })
+
+//   For testing purposes
+  const [data, setData] = useState<dateType>({
+    id: '1',
+    name: 'Dev',
+    location: 'Goa',
+    age: '25',
+    sex: 'Male',
+    pincode: '403110',
+    address: 'A 303 Casa Amora',
+    visit_date: '',
+    phy_id: '132334',
+    phy_name: 'Rishabh Singh',
+    phone: '9373869815',
+    email: '',
+    aud: '',
+    jti: ''
+  })
 
   const [startDate, setStartDate] = useState(data.visit_date);
 
@@ -236,7 +236,16 @@ function Addpage() {
                         </div>
                         <div className="inputgroup">
                             <FormLabel>Visit Date</FormLabel>
-                            <DatePicker selected={data.visit_date} onChange={(e) => handleChange('visit_date', e)} />
+                            <DatePicker
+                            placeholderText="Select Date"
+                            isClearable
+                            selected={ (typeof data.visit_date == 'string' ) ? null : data.visit_date}
+                            onChange={(e) => handleChange('visit_date', e)}
+                            showTimeSelect
+                            timeFormat="HH:mm:ss"
+                            timeIntervals={1}
+                            timeCaption="Time"
+                            />
                         </div>
                     </div>
                     <hr style={{color: "lightgray", backgroundColor: "gray", border: "none", height: "5px", marginTop: "20px", marginRight: "50px"}}/>
