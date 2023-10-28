@@ -62,7 +62,7 @@ app.post("/api/add", async (req, res) => {
     for (let index = 0; index < rows.length; index++) {
         const row = rows[index];
         // console.log(rows[index], 'working')
-        if (phone == row._rawData[13]) {
+        if (phone == row._rawData[10]) {
             // console.log(index)
             
             await rows[index].delete(); // delete a row

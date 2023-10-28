@@ -269,6 +269,7 @@ function Editpage() {
                                 timeIntervals={1}
                                 timeCaption="Time"
                                 isClearable
+                                className="custom-datepicker"
                                 />
                             </div>
                         </div>

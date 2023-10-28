@@ -45,7 +45,7 @@ function Addpage() {
     sex: 'Male',
     pincode: '403110',
     address: 'A 303 Casa Amora',
-    visit_date: '',
+    visit_date: new Date(),
     phy_id: '132334',
     phy_name: 'Rishabh Singh',
     phone: '9373869815',
@@ -245,6 +245,8 @@ function Addpage() {
                             timeFormat="HH:mm:ss"
                             timeIntervals={1}
                             timeCaption="Time"
+                            // className="custom-datepicker"
+                            className="MuiInputBase-root MuiOutlinedInput-root custom-datepicker"
                             />
                         </div>
                     </div>

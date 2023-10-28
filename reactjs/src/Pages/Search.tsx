@@ -178,6 +178,7 @@ function Search() {
                                 timeIntervals={1}
                                 timeCaption="Time"
                                 disabled
+                                className="custom-datepicker"
                                 />
                             </div>
                         </div>
