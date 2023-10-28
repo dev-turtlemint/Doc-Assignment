@@ -15,47 +15,55 @@ import { setEmail, setAud, setJti} from '../actions';
 
 function Select() {
     const REACT_APP_CLIENT_ID = process.env.REACT_APP_CLIENT_ID;
+    const [loggedIn, setloggedIn] = useState(false)
 
     const dispatch = useDispatch();
-    const state = useSelector((state) => state);
+    const state: any = useSelector((state) => state);
     // console.log(state)
 
     const [loading, setLoading] = useState(true);
 
     useEffect(()=> {
-        console.log(state)
+        if(state.user['email'] != ''){
+            setloggedIn(true)
+            alert(`Logged in as ${state?.user['email']}`)
+        }
     },[state])
+
   return (
     <div className="outerBox">
         <div className="glassDesign">
         {loading && (
-            <div className="box">
-                <div>
+            <div style={{ display: "flex", flexDirection: "row", width: '80vw', height: '85vh'}}>
+                <div style={{minWidth: "12vw"}}>
                     <Sidebar/>
                 </div>
                 <div className="vertical"></div>
-                    <div style={{justifySelf: "center", alignSelf: "center", marginRight: "35vw"}}>
+                <div className='flex-center'>
+                        <div>
+                        <GoogleOAuthProvider clientId={`${REACT_APP_CLIENT_ID}`}>
+                            <GoogleLogin
 
-                    <GoogleOAuthProvider clientId={`${REACT_APP_CLIENT_ID}`}>
-                        <GoogleLogin
+                                onSuccess={(  credentialResponse: any) => {
+                                // onSuccess={(  response: TokenResponse|CodeResponse|any) => {
+                                const credential: any = jwt_decode(credentialResponse.credential);
+                                // console.log(credential);
 
-                            onSuccess={(  credentialResponse: any) => {
-                            // onSuccess={(  response: TokenResponse|CodeResponse|any) => {
-                            const credential: any = jwt_decode(credentialResponse.credential);
-                            // console.log(credential);
-
-                            dispatch(setEmail(credential.email));
-                            dispatch(setAud(credential.aud));
-                            dispatch(setJti(credential.jti));
-                            }}
-                            onError={() => {
-                            console.log('Login Failed');
-                            }}
+                                dispatch(setEmail(credential.email));
+                                dispatch(setAud(credential.aud));
+                                dispatch(setJti(credential.jti));
+                                }}
+                                onError={() => {
+                                console.log('Login Failed');
+                                }}
+                                
+                            />
                             
-                        />
-                    </GoogleOAuthProvider>
+                        </GoogleOAuthProvider>
+                        
+                        </div>
+                </div>  
                 </div>
-            </div>
             )}
         </div>
     </div>

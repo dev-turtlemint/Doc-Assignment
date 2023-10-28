@@ -1,4 +1,4 @@
-import { Button, FormLabel, IconButton, TextField } from "@mui/material";
+import { Button, FormLabel, IconButton, MenuItem, Select, TextField } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import "../App.css";
@@ -14,6 +14,9 @@ const REACT_APP_BASE_URL = process.env.REACT_APP_BASE_URL;
 
 
 function Addpage() {
+
+  const [doctorsList, setDoctorsList] = useState([]);
+  const [roomlist, setRoomList] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const state: any = useSelector((state) => state);
@@ -30,6 +33,7 @@ function Addpage() {
 //     visit_date: '',
 //     phy_id: '',
 //     phy_name: '',
+//     room_no: '',
 //     phone: '',
 //     email: '',
 //     aud: '',
@@ -47,7 +51,8 @@ function Addpage() {
     address: 'A 303 Casa Amora',
     visit_date: new Date(),
     phy_id: '132334',
-    phy_name: 'Rishabh Singh',
+    phy_name: '',
+    room_no: '',
     phone: '9373869815',
     email: '',
     aud: '',
@@ -84,6 +89,28 @@ function Addpage() {
     const response = await req.json();
     if (response.status === "ok") {
         alert("Patient added Successfully!");
+    } else {
+        alert(response.error);
+    }
+  };
+
+
+  const updateClinicData = async () => {
+    const req = await fetch(`${REACT_APP_BASE_URL}/api/clinic-data`, {
+        method: "GET",
+        headers: {
+        "Content-Type": "application/json",
+        // "x-access-token": localStorage.getItem("token"),
+        }
+    });
+    const response = await req.json();
+    if (response.status === "ok") {
+        // alert("Data added Successfully!");
+        setDoctorsList(response.data.doctors)
+        setRoomList(response.data.rooms)
+
+        // handleChange('visit_date', response.doctors)
+        console.log(response)
     } else {
         alert(response.error);
     }
@@ -137,6 +164,12 @@ function Addpage() {
     }
   },[state])
 
+
+
+  useEffect(() => {
+    updateClinicData();
+  }, [])
+
   return (
     <div className="outerBox">
       <div className="glassDesign">
@@ -147,7 +180,7 @@ function Addpage() {
                 <Sidebar/>
             </div>
             <div className="vertical"></div>
-
+            <div className="flex-center-hor">
             <div className="formcolumn">
                 <form className="loginForm">
                     <div className="inputrow">
@@ -219,11 +252,40 @@ function Addpage() {
                         </div>
                         <div className="inputgroup">
                             <FormLabel>Physician Name (First, Last Name)</FormLabel>
-                            <TextField
+                            <Select
+                                sx={{ width: '300px' }}
+                                labelId="phy_name"
+                                id="phy_name"
+                                value={data.phy_name}
+                                label="Age"
+                                onChange={(e: any) => handleChange('phy_name', e.target.value)}
+                            >   {
+                                    doctorsList.map((value, index) => (
+                                        <MenuItem key={index} value={value}>{value}</MenuItem>
+                                    ))
+                                }
+                            </Select>
+                            {/* <TextField
                             sx={{ width: '300px' }}
                             value={data.phy_name}
                             onChange={(e) => handleChange('phy_name', e.target.value)}
-                            />
+                            /> */}
+                        </div>
+                        <div className="inputgroup">
+                            <FormLabel>Room No</FormLabel>
+                            <Select
+                                sx={{ width: '150px' }}
+                                labelId="room_no"
+                                id="room_no"
+                                value={data.room_no}
+                                label="Age"
+                                onChange={(e: any) => handleChange('room_no', e.target.value)}
+                            >   {
+                                    roomlist.map((value, index) => (
+                                        <MenuItem key={index} value={value}>{value}</MenuItem>
+                                    ))
+                                }
+                            </Select>
                         </div>
                     </div>
                     <div className="inputrow">
@@ -243,7 +305,7 @@ function Addpage() {
                             onChange={(e) => handleChange('visit_date', e)}
                             showTimeSelect
                             timeFormat="HH:mm:ss"
-                            timeIntervals={1}
+                            timeIntervals={60}
                             timeCaption="Time"
                             // className="custom-datepicker"
                             className="MuiInputBase-root MuiOutlinedInput-root custom-datepicker"
@@ -252,15 +314,16 @@ function Addpage() {
                     </div>
                     <hr style={{color: "lightgray", backgroundColor: "gray", border: "none", height: "5px", marginTop: "20px", marginRight: "50px"}}/>
                 </form>
-                <div style={{justifySelf: "flex-end", alignSelf: "flex-end"}}>
+                <div style={{justifySelf: "center", alignSelf: "center"}}>
                         <Button
-                        style={{ marginRight: "90px"}}
+                        style={{fontSize: "medium"}}
                         onClick = {e => handleSubmitDetails(e)}
                         >
                         Submit
                         </Button>
                     </div>
                 </div>
+            </div>
         </div>
         )}
       </div>
@@ -269,3 +332,5 @@ function Addpage() {
 }
 
 export default Addpage;
+
+

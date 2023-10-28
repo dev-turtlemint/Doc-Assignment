@@ -23,23 +23,23 @@ const Sidebar = () => {
     <div className='pagecolumn'>
         <div className='pink bold'>
         <Button 
-        sx={currentPage === 'add' ? { fontWeight: 'bold' } : {}}        
+        sx={currentPage === 'add' ? { fontWeight: 'bold', fontSize: "medium" } : { fontSize: "medium" }}        
         onClick={() => {navigate('/add'); dispatch(setCurPage('add'));}}>
         Book Appointment
         </Button>
         </div>
         <Button
-        sx={currentPage === 'edit' ? { fontWeight: 'bold' } : {}}  
+        sx={currentPage === 'edit' ? { fontWeight: 'bold', fontSize: "medium"  } : {fontSize: "medium" }}  
         onClick={() => {navigate('/edit'); dispatch(setCurPage('edit'));}}>
         Edit Appointment
         </Button>
         <Button 
-        sx={currentPage === 'search' ? { fontWeight: 'bold' } : {}}  
+        sx={currentPage === 'search' ? { fontWeight: 'bold', fontSize: "medium"  } : {fontSize: "medium" }}  
         onClick={() => {navigate('/search'); dispatch(setCurPage('search'));}}>
         Search
         </Button>
         <Button 
-        sx={currentPage === 'select' ? { fontWeight: 'bold' } : {}}  
+        sx={currentPage === 'select' ? { fontWeight: 'bold', fontSize: "medium"  } : {fontSize: "medium" }}  
         onClick={() => {navigate('/select'); dispatch(setCurPage('select'));} }>
         Login
         </Button>

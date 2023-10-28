@@ -13,6 +13,7 @@ app.use(express.json());
 
 const { GoogleSpreadsheet } = require('google-spreadsheet');
 const { JWT, OAuth2 } = require('google-auth-library');
+const { doctorNames, roomData } = require("./data");
 
 
 
@@ -47,6 +48,7 @@ app.post("/api/add", async (req, res) => {
     const visit_date = req.body.data.visit_date;
     const phy_id = req.body.data.phy_id;
     const phy_name = req.body.data.phy_name;
+    const room_no = req.body.data.room_no;
     const phone = req.body.data.phone;
     const email = req.body.data.email;
     const aud = req.body.data.aud;
@@ -62,7 +64,7 @@ app.post("/api/add", async (req, res) => {
     for (let index = 0; index < rows.length; index++) {
         const row = rows[index];
         // console.log(rows[index], 'working')
-        if (phone == row._rawData[10]) {
+        if (phone == row._rawData[11]) {
             // console.log(index)
             
             await rows[index].delete(); // delete a row
@@ -89,6 +91,7 @@ app.post("/api/add", async (req, res) => {
             visit_date: visit_date,
             phy_id: phy_id,
             phy_name: phy_name,
+            room_no: room_no,
             phone: phone,
             email: email,
             aud: aud,
@@ -153,6 +156,28 @@ app.get("/api/search", async (req, res) => {
   }
 });
 
+app.get("/api/clinic-data", async (req, res) => {
+  try {
+
+    const doctors = doctorNames;
+    const rooms = roomData;
+
+    const clinicdata = {
+      doctors: doctors,
+      rooms: rooms
+    }
+    res.json({
+      status: "ok",
+      data: clinicdata,
+    })
+
+    return res;
+  } catch (error) {
+    console.log(error);
+    res.json({ status: "error", error: "Data not found!" });
+  }
+});
+
 app.post("/api/update", async (req, res) => {
     try {
   
@@ -207,8 +232,8 @@ app.post("/api/update", async (req, res) => {
       maxid = 1.0
       for (let index = 0; index < rows.length; index++) {
           const row = rows[index];
-          // console.log(row._rowNumber, phone, row._rawData[10], 'working')
-          if (phone == row._rawData[10]) {
+          console.log(row._rowNumber, phone, row._rawData[11], 'working')
+          if (phone == row._rawData[11]) {
               // console.log(index)
               await row.delete(); // delete a row
               break;

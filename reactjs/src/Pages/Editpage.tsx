@@ -1,4 +1,4 @@
-import { Button, FormLabel, IconButton, TextField } from "@mui/material";
+import { Button, FormLabel, IconButton, MenuItem, Select, TextField } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../App.css";
@@ -13,6 +13,10 @@ const REACT_APP_BASE_URL = process.env.REACT_APP_BASE_URL;
 
 
 function Editpage() {
+    const [doctorsList, setDoctorsList] = useState([]);
+    const [roomlist, setRoomList] = useState([]);
+
+
     const navigate = useNavigate();
 
     const [loading, setLoading] = useState(false);
@@ -30,6 +34,7 @@ function Editpage() {
         visit_date: '',
         phy_id: '',
         phy_name: '',
+        room_no: '',
         phone: '',
         email: '',
         aud: '',
@@ -123,6 +128,31 @@ function Editpage() {
         }
       },[searchText])
 
+      const updateClinicData = async () => {
+        const req = await fetch(`${REACT_APP_BASE_URL}/api/clinic-data`, {
+            method: "GET",
+            headers: {
+            "Content-Type": "application/json",
+            // "x-access-token": localStorage.getItem("token"),
+            }
+        });
+        const response = await req.json();
+        if (response.status === "ok") {
+            // alert("Data added Successfully!");
+            setDoctorsList(response.data.doctors)
+            setRoomList(response.data.rooms)
+
+            // handleChange('visit_date', response.doctors)
+            console.log(response)
+        } else {
+            alert(response.error);
+        }
+      };
+
+      useEffect(() => {
+        updateClinicData();
+      }, [])
+
     async function delappointment() {
     
         const req = await fetch(`${REACT_APP_BASE_URL}/api/del`, {
@@ -154,7 +184,7 @@ function Editpage() {
                     <Sidebar/>
                 </div>
                 <div className="vertical"></div>
-
+                <div className="flex-center-hor">
                 <div className="formcolumn">
                     <form className="loginForm">
                         <div className="inputrow">
@@ -167,8 +197,10 @@ function Editpage() {
                                     />
                                     <Button
                                     onClick={findpatient}
+                                    style={{fontSize: "medium"}}
                                     >Find</Button>
                                     <Button
+                                    style={{fontSize: "medium"}}
                                     onClick={delappointment}
                                     >Delete</Button>
                                 </div>
@@ -242,12 +274,41 @@ function Editpage() {
                             </div>
                             <div className="inputgroup">
                                 <FormLabel>Physician Name (First, Last Name)</FormLabel>
-                                <TextField
+                                <Select
+                                    sx={{ width: '300px' }}
+                                    labelId="phy_name"
+                                    id="phy_name"
+                                    value={data.phy_name}
+                                    label="Age"
+                                    onChange={(e: any) => handleChange('phy_name', e.target.value)}
+                                >   {
+                                        doctorsList.map((value, index) => (
+                                            <MenuItem key={index} value={value}>{value}</MenuItem>
+                                        ))
+                                    }
+                                </Select>
+                                {/* <TextField
                                 sx={{ width: '300px' }}
                                 value={data.phy_name}
                                 onChange={(e) => handleChange('phy_name', e.target.value)}
-                                />
+                                /> */}
                             </div>
+                            <div className="inputgroup">
+                            <FormLabel>Room No</FormLabel>
+                            <Select
+                                sx={{ width: '150px' }}
+                                labelId="room_no"
+                                id="room_no"
+                                value={data.room_no}
+                                label="Age"
+                                onChange={(e: any) => handleChange('room_no', e.target.value)}
+                            >   {
+                                    roomlist.map((value, index) => (
+                                        <MenuItem key={index} value={value}>{value}</MenuItem>
+                                    ))
+                                }
+                            </Select>
+                        </div>
                         </div>
                         <div className="inputrow">
                             <div className="inputgroup">
@@ -266,7 +327,7 @@ function Editpage() {
                                 dateFormat="yyyy-MM-dd HH:mm:ss"
                                 showTimeSelect
                                 timeFormat="HH:mm:ss"
-                                timeIntervals={1}
+                                timeIntervals={60}
                                 timeCaption="Time"
                                 isClearable
                                 className="custom-datepicker"
@@ -275,15 +336,16 @@ function Editpage() {
                         </div>
                         <hr style={{color: "lightgray", backgroundColor: "gray", border: "none", height: "5px", marginTop: "20px", marginRight: "50px"}}/>
                     </form>
-                    <div style={{justifySelf: "flex-end", alignSelf: "flex-end"}}>
-                        <Button style={{
-                        marginRight: "90px"}}
+                    <div style={{justifySelf: "center", alignSelf: "center"}}>
+                        <Button 
+                        style={{fontSize: "medium"}}
                         onClick = {e => handleSubmitDetails(e)}
                         >
                         Submit
                         </Button>
                     </div>
                     </div>
+                </div>
             </div>
             )}
         </div>

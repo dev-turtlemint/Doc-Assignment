@@ -1,4 +1,4 @@
-import { Button, FormLabel, IconButton, TextField } from "@mui/material";
+import { Button, FormLabel, IconButton, MenuItem, Select, TextField } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../App.css";
@@ -13,6 +13,10 @@ const REACT_APP_BASE_URL = process.env.REACT_APP_BASE_URL;
 
 
 function Search() {
+    const [doctorsList, setDoctorsList] = useState([]);
+    const [roomlist, setRoomList] = useState([]);
+
+
     const [loading, setLoading] = useState(false);
 
     const[searchText, setSearchText] = useState('');
@@ -28,6 +32,7 @@ function Search() {
         visit_date: '',
         phy_id: '',
         phy_name: '',
+        room_no: '',
         phone: '',
         email: '',
         aud: '',
@@ -86,6 +91,30 @@ function Search() {
         getData();
       };
 
+      const updateClinicData = async () => {
+        const req = await fetch(`${REACT_APP_BASE_URL}/api/clinic-data`, {
+            method: "GET",
+            headers: {
+            "Content-Type": "application/json",
+            // "x-access-token": localStorage.getItem("token"),
+            }
+        });
+        const response = await req.json();
+        if (response.status === "ok") {
+            // alert("Data added Successfully!");
+            setDoctorsList(response.data.doctors)
+            setRoomList(response.data.rooms)
+            // handleChange('visit_date', response.doctors)
+            console.log(response)
+        } else {
+            alert(response.error);
+        }
+      };
+
+      useEffect(() => {
+        updateClinicData();
+      },[])
+
       useEffect(() => {
         if(searchText !== ''){
             console.log(searchText)
@@ -101,7 +130,7 @@ function Search() {
                     <Sidebar/>
                 </div>
                 <div className="vertical"></div>
-
+                <div className="flex-center-hor">
                 <div className="formcolumn">
                     <form className="loginForm">
                         <div className="inputrow">
@@ -114,6 +143,7 @@ function Search() {
                                     />
                                     <Button
                                         onClick={findpatient}
+                                        style={{fontSize: "medium"}}
                                         >Find</Button>
                                 </div>
                             </div>
@@ -159,7 +189,38 @@ function Search() {
                             </div>
                             <div className="inputgroup">
                                 <FormLabel>Physician Name (First, Last Name)</FormLabel>
-                                <TextField  sx={{ width: '300px' }} InputProps={{ readOnly: true }} value={data.phy_name}/>
+                                <Select
+                                    sx={{ width: '300px' }}
+                                    labelId="phy_name"
+                                    id="phy_name"
+                                    value={data.phy_name}
+                                    label="Age"
+                                    readOnly={true}
+                                    onChange={(e: any) => handleChange('phy_name', e.target.value)}
+                                >   {
+                                        doctorsList.map((value, index) => (
+                                            <MenuItem key={index} value={value}>{value}</MenuItem>
+                                        ))
+                                    }
+                                </Select>
+                                {/* <TextField  sx={{ width: '300px' }} InputProps={{ readOnly: true }} value={data.phy_name}/> */}
+                            </div>
+                            <div className="inputgroup">
+                                <FormLabel>Room No</FormLabel>
+                                <Select
+                                    sx={{ width: '150px' }}
+                                    labelId="room_no"
+                                    id="room_no"
+                                    value={data.room_no}
+                                    label="Age"
+                                    readOnly={true}
+                                    onChange={(e: any) => handleChange('room_no', e.target.value)}
+                                >   {
+                                        roomlist.map((value, index) => (
+                                            <MenuItem key={index} value={value}>{value}</MenuItem>
+                                        ))
+                                    }
+                                </Select>
                             </div>
                         </div>
                         <div className="inputrow">
@@ -186,6 +247,7 @@ function Search() {
 
                     </form>
                     </div>
+                </div>
             </div>
             )}
         </div>
