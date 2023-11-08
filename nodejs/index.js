@@ -11,11 +11,11 @@ app.use(cors());
 app.use(express.json());
 
 
+// ExcelSheet
+
 const { GoogleSpreadsheet } = require('google-spreadsheet');
 const { JWT, OAuth2 } = require('google-auth-library');
 const { doctorNames, roomData } = require("./data");
-
-
 
 const serviceAccountAuth = new JWT({
     email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
@@ -36,6 +36,29 @@ const doc = new GoogleSpreadsheet(process.env.GOOGLE_SHEET_ID, serviceAccountAut
 
 }());
 
+
+// MongoDB
+
+const mongoose = require("mongoose");
+const User = require("./models/user.model");
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
+const Patient = require("./models/patient.model.js");
+
+//to remove warning the `strictQuery` option will be switched back to `false` by default in Mongoose 7
+mongoose.set("strictQuery", true);
+
+mongoose
+  .connect(process.env.DB_URL)
+  .then(() => {
+    console.log("Successfully connected to MongoDB Atlas!");
+  })
+  .catch((error) => {
+    console.log("Unable to connect to MongoDB Atlas!");
+    console.error(error);
+  });
+
+
 app.post("/api/add", async (req, res) => {
   try {
     const id = req.body.data.id;
@@ -53,6 +76,10 @@ app.post("/api/add", async (req, res) => {
     const email = req.body.data.email;
     const aud = req.body.data.aud;
     const jti = req.body.data.jti;
+
+
+    
+
     // console.log(next_visit, 'working')
 
     await serviceAccountAuth.authorize();
@@ -78,6 +105,32 @@ app.post("/api/add", async (req, res) => {
             maxid = Number(row._rawData[0])
         }
     };
+
+    const user = await Patient.findOneAndDelete({
+      email: email,
+      phone: phone,
+    });
+
+    // Putting data in mongoDB
+    const record = {
+      id: (maxid + 1.0),
+      name: name,
+      location: location,
+      age: age,
+      sex: sex, 
+      pincode: pincode, 
+      address: address,
+      visit_date: visit_date,
+      phy_id: phy_id,
+      phy_name: phy_name,
+      room_no: room_no,
+      phone: phone,
+      email: email,
+      aud: aud,
+      jti: jti
+    };
+    const response = await Patient.create(record);
+
 
 
     const addnewrow = await sheet.addRow({
@@ -239,6 +292,11 @@ app.post("/api/update", async (req, res) => {
               break;
           }
       };
+
+      const user = await Patient.findOneAndDelete({
+        email: email,
+        phone: phone,
+      });
   
       res.json({ status: "ok" });
     } catch (error) {
